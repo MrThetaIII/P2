@@ -1,0 +1,28 @@
+{
+    "sqltools.connections": [
+    
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "pg",
+            "database": "practice",
+            "username": "postgres",
+            "password": "homies2030"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "progress",
+            "database": "progress_data",
+            "username": "root",
+            "password": "MR0:360AcuteTheta!!Regular<>Axes"
+        }
+    ]
+}
