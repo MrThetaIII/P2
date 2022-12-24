@@ -1,16 +1,5 @@
 {
     "sqltools.connections": [
-    
-        {
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 5432,
-            "driver": "PostgreSQL",
-            "name": "pg",
-            "database": "practice",
-            "username": "postgres",
-            "password": "homies2030"
-        },
         {
             "mysqlOptions": {
                 "authProtocol": "default"
@@ -23,6 +12,39 @@
             "database": "progress_data",
             "username": "root",
             "password": "MR0:360AcuteTheta!!Regular<>Axes"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "test",
+            "database": "test",
+            "username": "test",
+            "password": "asd1234"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "pg",
+            "database": "test",
+            "username": "postgres",
+            "password": "homies2030"
+        },
+        {
+            "previewLimit": 50,
+            "server": "127.0.0.1",
+            "port": 5005,
+            "driver": "PostgreSQL",
+            "name": "storefront",
+            "database": "storefront",
+            "username": "deep",
+            "password": "1234"
         }
+    ],
+    "cSpell.words": [
+        "cnctn"
     ]
 }
