@@ -53,7 +53,6 @@ export const authenticate = async (_req: Request, res: Response) => {
 		user_password: _req.body.user_password,
 	};
 	const auth_user = await store.authenticate(user);
-	console.log(auth_user);
 	if (!auth_user) {
 		res.status(401).json({ message: 'Wrong Email or password' });
 	} else {

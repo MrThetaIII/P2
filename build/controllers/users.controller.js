@@ -141,7 +141,6 @@ var authenticate = function (_req, res) { return __awaiter(void 0, void 0, void 
                 return [4 /*yield*/, store.authenticate(user)];
             case 1:
                 auth_user = _a.sent();
-                console.log(auth_user);
                 if (!auth_user) {
                     res.status(401).json({ message: 'Wrong Email or password' });
                 }

@@ -42,18 +42,26 @@ var product_1 = require("../../database/models/product");
 var store = new order_1.OrderStore();
 describe('orders model methods', function () {
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, userStore, product, productStore;
+        var user1, user2, userStore, product, productStore;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    user = {
+                    user1 = {
                         user_name_: 'Ali',
                         email: 'Ali@Ali.Ali',
                         user_password: 'Ali',
                     };
+                    user2 = {
+                        user_name_: 'Ali',
+                        email: 'Ali@Ali.Alii',
+                        user_password: 'Ali',
+                    };
                     userStore = new user_1.UserStore();
-                    return [4 /*yield*/, userStore.create(user)];
+                    return [4 /*yield*/, userStore.create(user1)];
                 case 1:
+                    _a.sent();
+                    return [4 /*yield*/, userStore.create(user2)];
+                case 2:
                     _a.sent();
                     product = {
                         product_name: 'Ali',
@@ -79,12 +87,27 @@ describe('orders model methods', function () {
         expect(store.create).toBeDefined();
     });
     it('Should have an update method', function () {
-        expect(store.update).toBeDefined();
+        expect(store.updateOrder).toBeDefined();
     });
     it('should have a getOrdersByUser method', function () {
         expect(store.getOrdersByUser).toBeDefined();
     });
-    it('Should have a method to mark orders as fulfilled', function () {
+    it('should have a addProduct method', function () {
+        expect(store.addProduct).toBeDefined();
+    });
+    it('should have a deleteProduct method', function () {
+        expect(store.deleteProduct).toBeDefined();
+    });
+    it('should have a updateProduct method', function () {
+        expect(store.updateProduct).toBeDefined();
+    });
+    it('should have a getProducts method', function () {
+        expect(store.getProducts).toBeDefined();
+    });
+    it('should have a getProductsByOrder method', function () {
+        expect(store.getProductsByOrder).toBeDefined();
+    });
+    it('Should have a method to mark a product in an order as fulfilled', function () {
         expect(store.markFulfilled).toBeDefined();
     });
     it('Index shall return a list of orders', function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -106,10 +129,8 @@ describe('orders model methods', function () {
                 case 0:
                     order = {
                         user_id_: 1,
-                        product_id: 1,
-                        quantity: 1,
                     };
-                    return [4 /*yield*/, store.create(order)];
+                    return [4 /*yield*/, store.create(order, [{ order_id: 1, product_id: 1, quantity: 1 }])];
                 case 1:
                     result = _a.sent();
                     expect(result.user_id_).toEqual(order.user_id_);
@@ -135,14 +156,12 @@ describe('orders model methods', function () {
             switch (_a.label) {
                 case 0:
                     order = {
-                        user_id_: 1,
-                        product_id: 1,
-                        quantity: 2,
+                        user_id_: 2,
                     };
-                    return [4 /*yield*/, store.update(1, order)];
+                    return [4 /*yield*/, store.updateOrder(1, order)];
                 case 1:
                     result = _a.sent();
-                    expect(result.quantity).toEqual(order.quantity);
+                    expect(result.user_id_).toEqual(order.user_id_);
                     return [2 /*return*/];
             }
         });
@@ -151,7 +170,7 @@ describe('orders model methods', function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.getOrdersByUser(1)];
+                case 0: return [4 /*yield*/, store.getOrdersByUser(2)];
                 case 1:
                     result = _a.sent();
                     expect(result).toHaveSize(1);
@@ -159,7 +178,7 @@ describe('orders model methods', function () {
             }
         });
     }); });
-    it('markFulfilled method shall mark an order as fulfilled', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('markFulfilled method shall mark an order\' product as fulfilled', function () { return __awaiter(void 0, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -167,6 +186,72 @@ describe('orders model methods', function () {
                 case 1:
                     result = _a.sent();
                     expect(result.fulfilled).toEqual(true);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('addProduct method shall add a product to an order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var orderProduct, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    orderProduct = {
+                        order_id: 1,
+                        product_id: 1,
+                        quantity: 1,
+                    };
+                    return [4 /*yield*/, store.addProduct(orderProduct.order_id, orderProduct)];
+                case 1:
+                    result = _a.sent();
+                    expect(result.order_id).toEqual(orderProduct.order_id);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('updateProduct method shall update a product in an order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var orderProduct, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    orderProduct = {
+                        order_id: 1,
+                        product_id: 1,
+                        quantity: 2,
+                    };
+                    return [4 /*yield*/, store.updateProduct(1, orderProduct)];
+                case 1:
+                    result = _a.sent();
+                    expect(result.quantity).toEqual(orderProduct.quantity);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('deleteProduct method shall delete a product from an order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var resultA, resultB;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, store.getProducts()];
+                case 1:
+                    resultA = (_a.sent()).length;
+                    return [4 /*yield*/, store.deleteProduct(1)];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, store.getProducts()];
+                case 3:
+                    resultB = (_a.sent()).length;
+                    expect(resultA - resultB).toEqual(1);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('getProducts method shall return a list of all products', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, store.getProducts()];
+                case 1:
+                    result = _a.sent();
+                    expect(result.length).toBeDefined();
                     return [2 /*return*/];
             }
         });
@@ -180,9 +265,12 @@ describe('orders model methods', function () {
                     return [4 /*yield*/, userStore.delete(1)];
                 case 1:
                     _a.sent();
+                    return [4 /*yield*/, userStore.delete(2)];
+                case 2:
+                    _a.sent();
                     productStore = new product_1.ProductStore();
                     return [4 /*yield*/, productStore.delete(1)];
-                case 2:
+                case 3:
                     _a.sent();
                     return [2 /*return*/];
             }

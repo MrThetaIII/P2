@@ -22,14 +22,14 @@ describe('User endpoints', () => {
 		const response = await request.post('/api/users/').send(user);
 		expect(response.status).toEqual(200);
 	});
-	it('[POST]/api/users/authenticate should require a token to authenticate a user', async () => {
+	it('[POST]/api/users/authenticate should authenticate a user', async () => {
 		const user: User = {
 			user_name_: 'Alii',
 			email: 'Ali@Ali.Aliii',
 			user_password: 'Alii',
 		};
 		const response = await request.post('/api/users/authenticate').send(user);
-		expect(response.status).toEqual(401);
+		expect(response.status).toEqual(200);
 	});
 	it('[DELETE]/api/users/:id should require a token to delete a user', async () => {
 		const response = await request.delete('/api/users/1');
@@ -62,12 +62,32 @@ describe('Order endpoints', () => {
 		const response = await request.patch('/api/orders/1');
 		expect(response.status).toEqual(401);
 	});
-	it('[PATCH]/api/orders/fulfill/:id should require a token to mark an order as fulfilled', async () => {
-		const response = await request.patch('/api/orders/fulfill/1');
+	it('[PATCH]/api/orders/products/:id/fulfill should require a token to mark a product as fulfilled', async () => {
+		const response = await request.patch('/api/orders/products/1/fulfill');
 		expect(response.status).toEqual(401);
 	});
 	it('[GET]/api/orders/ should require a token to get all orders by the current user', async () => {
 		const response = await request.get('/api/orders/');
+		expect(response.status).toEqual(401);
+	});
+	it('[GET]/api/orders/products should require a token to get all products', async () => {
+		const response = await request.get('/api/orders/products');
+		expect(response.status).toEqual(401);
+	});
+	it('[GET]/api/orders/:id/products should require a token to get all products by order', async () => {
+		const response = await request.get('/api/orders/1/products');
+		expect(response.status).toEqual(401);
+	});
+	it('[POST]/api/orders/:id/products should require a token to add a product to an order', async () => {
+		const response = await request.post('/api/orders/1/products');
+		expect(response.status).toEqual(401);
+	});
+	it('[PATCH]/api/orders/products/:id should require a token to update a product', async () => {
+		const response = await request.patch('/api/orders/products/1');
+		expect(response.status).toEqual(401);
+	});
+	it('[DELETE]/api/orders/products/:id should require a token to delete a product', async () => {
+		const response = await request.delete('/api/orders/products/1');
 		expect(response.status).toEqual(401);
 	});
 });

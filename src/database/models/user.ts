@@ -95,19 +95,22 @@ export class UserStore {
 
 	async authenticate(user: User): Promise<User | null> {
 		try {
-			const sql = 'SELECT user_password FROM users WHERE email=($1)';
+			const sql =
+				'SELECT id, user_name_, email, created_at FROM users WHERE email=($1)';
+			const sql_ = 'SELECT user_password FROM users WHERE email=($1)';
 			const cnctn = await client.connect();
 			const result = await cnctn.query(sql, [user.email]);
+			const result_ = await cnctn.query(sql_, [user.email]);
 			cnctn.release();
 			if (result.rows.length) {
-				const password = result.rows[0].user_password;
+				const password = result_.rows[0].user_password;
 				if (
 					bcrypt.compareSync(
 						`${user.user_password}${process.env.PEPPER}`,
 						password,
 					)
 				) {
-					return user;
+					return result.rows[0];
 				}
 			}
 			return null;

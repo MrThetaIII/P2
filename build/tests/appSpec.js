@@ -85,7 +85,7 @@ describe('User endpoints', function () {
             }
         });
     }); });
-    it('[POST]/api/users/authenticate should require a token to authenticate a user', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('[POST]/api/users/authenticate should authenticate a user', function () { return __awaiter(void 0, void 0, void 0, function () {
         var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -98,7 +98,7 @@ describe('User endpoints', function () {
                     return [4 /*yield*/, request.post('/api/users/authenticate').send(user)];
                 case 1:
                     response = _a.sent();
-                    expect(response.status).toEqual(401);
+                    expect(response.status).toEqual(200);
                     return [2 /*return*/];
             }
         });
@@ -189,11 +189,11 @@ describe('Order endpoints', function () {
             }
         });
     }); });
-    it('[PATCH]/api/orders/fulfill/:id should require a token to mark an order as fulfilled', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('[PATCH]/api/orders/products/:id/fulfill should require a token to mark a product as fulfilled', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.patch('/api/orders/fulfill/1')];
+                case 0: return [4 /*yield*/, request.patch('/api/orders/products/1/fulfill')];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toEqual(401);
@@ -206,6 +206,66 @@ describe('Order endpoints', function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, request.get('/api/orders/')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[GET]/api/orders/products should require a token to get all products', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/orders/products')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[GET]/api/orders/:id/products should require a token to get all products by order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/orders/1/products')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[POST]/api/orders/:id/products should require a token to add a product to an order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.post('/api/orders/1/products')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[PATCH]/api/orders/products/:id should require a token to update a product', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.patch('/api/orders/products/1')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[DELETE]/api/orders/products/:id should require a token to delete a product', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.delete('/api/orders/products/1')];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toEqual(401);

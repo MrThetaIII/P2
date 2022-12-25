@@ -12,7 +12,7 @@ const authorize = (_req: Request, res: Response, next: NextFunction) => {
 		_req.body.user = decoded;
 		next();
 	} catch (err) {
-		res.status(401).json({ message: 'Failed authentication' });
+		res.status(401).json({ message: 'Failed authorization' });
 	}
 };
 

@@ -15,7 +15,7 @@ var authorize = function (_req, res, next) {
         next();
     }
     catch (err) {
-        res.status(401).json({ message: 'Failed authentication' });
+        res.status(401).json({ message: 'Failed authorization' });
     }
 };
 exports.default = authorize;

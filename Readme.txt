@@ -36,7 +36,7 @@ go: build and run the server
 users:
 [GET]/:id - get user by id [Need Token]
 [DELETE]/:id - delete user by id [Need Token]
-[POST]/authenticate - authenticate user [Need Token]
+[POST]/authenticate - authenticate user
 Body:
 {
     "user_name_": "***",
@@ -79,20 +79,43 @@ Body:
 }
 
 orders:
-[PATCH]/fulfill/:id - mark order as fulfilled [Need Token]
+[PATCH]/products/:id/fulfill - mark product as fulfilled [Need Token]
 [GET]/all - get all orders [Need Token]
 [GET]/:id - get order by id [Need Token]
 [DELETE]/:id - delete order by id [Need Token]
 [PATCH]/:id - update order by id [Need Token]
 Body:
 {
-    "product_id": "***",
-    "quantity": "***"
+    "user_id_": "***"
 }
-[GET]/ - get all orders for the current user [Need Token]
+[GET]/ - get all orders by user [Need Token]
 [POST]/ - create order [Need Token]
+Body:
+{
+    "user_id_": "***",
+    "products": [
+        {
+            "product_id": "***",
+            "quantity": "***"
+        },
+        {
+            "product_id": "***",
+            "quantity": "***"
+        }
+    ]
+}
+[POST]/:id/products - add product to order [Need Token]
 Body:
 {
     "product_id": "***",
     "quantity": "***"
 }
+[DELETE]/products/:order_product_id - delete product from order [Need Token]
+[PATCH]/products/:order_product_id - update product from order [Need Token]
+Body:
+{
+    "order_id": "***"
+    "product_id": "***",
+    "quantity": "***"
+}
+[GET]/:id/products/ - get all products from order [Need Token]

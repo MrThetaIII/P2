@@ -32,7 +32,7 @@ var authenticate_1 = __importDefault(require("../../middleware/authenticate"));
 var user_router = (0, express_1.Router)();
 user_router.get('/:id', authenticate_1.default, user_controller.show);
 user_router.delete('/:id', authenticate_1.default, user_controller.destroy);
-user_router.post('/authenticate', authenticate_1.default, user_controller.authenticate);
+user_router.post('/authenticate', user_controller.authenticate);
 user_router.patch('/:id', authenticate_1.default, user_controller.update);
 user_router.get('/', authenticate_1.default, user_controller.index);
 user_router.post('/', user_controller.create);

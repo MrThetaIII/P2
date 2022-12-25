@@ -181,30 +181,34 @@ var UserStore = /** @class */ (function () {
     };
     UserStore.prototype.authenticate = function (user) {
         return __awaiter(this, void 0, void 0, function () {
-            var sql, cnctn, result, password, err_6;
+            var sql, sql_, cnctn, result, result_, password, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        sql = 'SELECT user_password FROM users WHERE email=($1)';
+                        _a.trys.push([0, 4, , 5]);
+                        sql = 'SELECT id, user_name_, email, created_at FROM users WHERE email=($1)';
+                        sql_ = 'SELECT user_password FROM users WHERE email=($1)';
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         cnctn = _a.sent();
                         return [4 /*yield*/, cnctn.query(sql, [user.email])];
                     case 2:
                         result = _a.sent();
+                        return [4 /*yield*/, cnctn.query(sql_, [user.email])];
+                    case 3:
+                        result_ = _a.sent();
                         cnctn.release();
                         if (result.rows.length) {
-                            password = result.rows[0].user_password;
+                            password = result_.rows[0].user_password;
                             if (bcrypt_1.default.compareSync("".concat(user.user_password).concat(process.env.PEPPER), password)) {
-                                return [2 /*return*/, user];
+                                return [2 /*return*/, result.rows[0]];
                             }
                         }
                         return [2 /*return*/, null];
-                    case 3:
+                    case 4:
                         err_6 = _a.sent();
                         throw new Error("Could not authenticate user. Error: ".concat(err_6));
-                    case 4: return [2 /*return*/];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

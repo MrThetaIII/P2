@@ -1,8 +1,14 @@
 import client from '../database';
+import { Product } from './product';
 
 export type Order = {
 	id?: number;
 	user_id_: number;
+	created_at?: string;
+};
+export type OrderProduct = {
+	id?: number;
+	order_id: number;
 	product_id: number;
 	quantity: number;
 	fulfilled?: boolean;
@@ -34,16 +40,20 @@ export class OrderStore {
 		}
 	}
 
-	async create(order: Order): Promise<Order> {
+	async create(order: Order, products: OrderProduct[]): Promise<Order> {
 		try {
-			const sql =
-				'INSERT INTO orders (user_id_, product_id, quantity) VALUES ($1, $2, $3) RETURNING *';
+			const sql = 'INSERT INTO orders (user_id_) VALUES($1) RETURNING *';
+			const sql_ =
+				'INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *';
 			const cnctn = await client.connect();
-			const result = await cnctn.query(sql, [
-				order.user_id_,
-				order.product_id,
-				order.quantity,
-			]);
+			const result = await cnctn.query(sql, [order.user_id_]);
+			for (let i = 0; i < products.length; i++) {
+				await cnctn.query(sql_, [
+					result.rows[0].id,
+					products[i].product_id,
+					products[i].quantity,
+				]);
+			}
 			cnctn.release();
 			return result.rows[0];
 		} catch (err) {
@@ -63,33 +73,114 @@ export class OrderStore {
 		}
 	}
 
-	async update(id: number, order: Order): Promise<Order> {
+	async updateOrder(id: number, order: Order): Promise<Order> {
 		try {
 			const sql =
-				'UPDATE orders SET user_id_=($1), product_id=($2), quantity=($3) WHERE id=($4) RETURNING *';
+				'UPDATE orders SET user_id_ = ($1) WHERE id = ($2) RETURNING * ';
 			const cnctn = await client.connect();
-			const result = await cnctn.query(sql, [
-				order.user_id_,
-				order.product_id,
-				order.quantity,
-				id,
-			]);
-			cnctn.release();
-			return result.rows[0];
-		} catch (err) {
-			throw new Error(`Could not update order ${order}. Error: ${err}`);
-		}
-	}
-
-	async markFulfilled(id: number, fulfilled: boolean): Promise<Order> {
-		try {
-			const sql = 'UPDATE orders SET fulfilled=($1) WHERE id=($2) RETURNING *';
-			const cnctn = await client.connect();
-			const result = await cnctn.query(sql, [fulfilled, id]);
+			const result = await cnctn.query(sql, [order.user_id_, id]);
 			cnctn.release();
 			return result.rows[0];
 		} catch (err) {
 			throw new Error(`Could not update order ${id}. Error: ${err}`);
+		}
+	}
+
+	async addProduct(id: number, product: OrderProduct): Promise<OrderProduct> {
+		try {
+			const sql =
+				'INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *';
+			const cnctn = await client.connect();
+			const result = await cnctn.query(sql, [
+				id,
+				product.product_id,
+				product.quantity,
+			]);
+			cnctn.release();
+			return result.rows[0];
+		} catch (err) {
+			throw new Error(
+				`Could not add product ${product} to order ${id}. Error: ${err}`,
+			);
+		}
+	}
+
+	async getProductsByOrder(id: number): Promise<Product[]> {
+		try {
+			const sql =
+				'SELECT * FROM products INNER JOIN order_products ON products.id = order_products.product_id WHERE order_products.order_id=($1)';
+			const cnctn = await client.connect();
+			const result = await cnctn.query(sql, [id]);
+			cnctn.release();
+			return result.rows;
+		} catch (err) {
+			throw new Error(`Could not get products for order ${id}. Error: ${err}`);
+		}
+	}
+
+	async getProducts(): Promise<OrderProduct[]> {
+		try {
+			const sql = 'SELECT * FROM order_products';
+			const cnctn = await client.connect();
+			const result = await cnctn.query(sql);
+			cnctn.release();
+			return result.rows;
+		} catch (err) {
+			throw new Error(`Could not get products. Error: ${err}`);
+		}
+	}
+
+	async deleteProduct(order_product_id: number): Promise<OrderProduct> {
+		try {
+			const sql = 'DELETE FROM order_products WHERE id=($1) RETURNING *';
+			const cnctn = await client.connect();
+			const result = await cnctn.query(sql, [order_product_id]);
+			cnctn.release();
+			return result.rows[0];
+		} catch (err) {
+			throw new Error(
+				`Could not delete product with id: ${order_product_id}. Error: ${err}`,
+			);
+		}
+	}
+
+	async updateProduct(
+		order_product_id: number,
+		product: OrderProduct,
+	): Promise<OrderProduct> {
+		try {
+			const sql =
+				'UPDATE order_products SET product_id = ($1), quantity = ($2) WHERE id = ($3) RETURNING * ';
+			const cnctn = await client.connect();
+			const result = await cnctn.query(sql, [
+				product.product_id,
+				product.quantity,
+				order_product_id,
+			]);
+			cnctn.release();
+			return result.rows[0];
+		} catch (err) {
+			throw new Error(
+				`Could not update product ${order_product_id}. Error: ${err}`,
+			);
+		}
+	}
+
+	async markFulfilled(
+		order_product_id: number,
+		fulfilled: boolean,
+	): Promise<OrderProduct> {
+		try {
+			const sql =
+				'UPDATE order_products SET fulfilled=($1) WHERE id=($2) RETURNING *';
+			const cnctn = await client.connect();
+			const result = await cnctn.query(sql, [fulfilled, order_product_id]);
+			cnctn.release();
+			return result.rows[0];
+		} catch (err) {
+			throw new Error(
+				`Could not update order ${order_product_id}. Error: ${err}`,
+			);
 		}
 	}
 
