@@ -35,10 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var order_1 = require("../../database/models/order");
 var user_1 = require("../../database/models/user");
 var product_1 = require("../../database/models/product");
+var reset_data_1 = __importDefault(require("../../database/models/testingUtil/reset.data"));
 var store = new order_1.OrderStore();
 describe('orders model methods', function () {
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -123,14 +127,19 @@ describe('orders model methods', function () {
         });
     }); });
     it('create method shall create an order', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var order, result;
+        var order, order_product, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     order = {
                         user_id_: 1,
                     };
-                    return [4 /*yield*/, store.create(order, [{ order_id: 1, product_id: 1, quantity: 1 }])];
+                    order_product = {
+                        order_id: 1,
+                        product_id: 1,
+                        quantity: 1,
+                    };
+                    return [4 /*yield*/, store.create(order, [order_product])];
                 case 1:
                     result = _a.sent();
                     expect(result.user_id_).toEqual(order.user_id_);
@@ -178,7 +187,7 @@ describe('orders model methods', function () {
             }
         });
     }); });
-    it('markFulfilled method shall mark an order\' product as fulfilled', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('markFulfilled method shall mark a product in an order as fulfilled', function () { return __awaiter(void 0, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -257,20 +266,10 @@ describe('orders model methods', function () {
         });
     }); });
     afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var userStore, productStore;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    userStore = new user_1.UserStore();
-                    return [4 /*yield*/, userStore.delete(1)];
+                case 0: return [4 /*yield*/, (0, reset_data_1.default)()];
                 case 1:
-                    _a.sent();
-                    return [4 /*yield*/, userStore.delete(2)];
-                case 2:
-                    _a.sent();
-                    productStore = new product_1.ProductStore();
-                    return [4 /*yield*/, productStore.delete(1)];
-                case 3:
                     _a.sent();
                     return [2 /*return*/];
             }

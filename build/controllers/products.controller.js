@@ -40,38 +40,52 @@ exports.update = exports.destroy = exports.create = exports.show = exports.index
 var product_1 = require("../database/models/product");
 var store = new product_1.ProductStore();
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var products;
+    var products, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, store.index()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, store.index()];
             case 1:
                 products = _a.sent();
                 res.json(products);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
+                res.status(400).json(err_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.index = index;
 var show = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, product;
+    var id, product, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                _a.trys.push([0, 2, , 3]);
                 id = parseInt(_req.params.id);
                 return [4 /*yield*/, store.show(id)];
             case 1:
                 product = _a.sent();
                 res.json(product);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                err_2 = _a.sent();
+                res.status(400).json(err_2);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.show = show;
 var create = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var product, new_product;
+    var product, new_product, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                _a.trys.push([0, 2, , 3]);
                 product = {
                     product_name: _req.body.product_name,
                     price: _req.body.price,
@@ -81,31 +95,43 @@ var create = function (_req, res) { return __awaiter(void 0, void 0, void 0, fun
             case 1:
                 new_product = _a.sent();
                 res.json(new_product);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                err_3 = _a.sent();
+                res.status(400).json(err_3);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.create = create;
 var destroy = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, product;
+    var id, product, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                _a.trys.push([0, 2, , 3]);
                 id = parseInt(_req.params.id);
                 return [4 /*yield*/, store.delete(id)];
             case 1:
                 product = _a.sent();
                 res.json(product);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                err_4 = _a.sent();
+                res.status(400).json(err_4);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.destroy = destroy;
 var update = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, product, updated_product;
+    var id, product, updated_product, err_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                _a.trys.push([0, 2, , 3]);
                 id = parseInt(_req.params.id);
                 product = {
                     product_name: _req.body.product_name,
@@ -116,7 +142,12 @@ var update = function (_req, res) { return __awaiter(void 0, void 0, void 0, fun
             case 1:
                 updated_product = _a.sent();
                 res.json(updated_product);
-                return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 2:
+                err_5 = _a.sent();
+                res.status(400).json(err_5);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };

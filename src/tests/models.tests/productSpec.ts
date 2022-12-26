@@ -1,4 +1,5 @@
 import { Product, ProductStore } from '../../database/models/product';
+import resetTables from '../../database/models/testingUtil/reset.data';
 
 const store = new ProductStore();
 
@@ -35,26 +36,27 @@ describe('products model methods', () => {
 	});
 
 	it('show method shall return a product', async () => {
-		const _ = await store.index();
-		const result = await store.show(_[0].id as number);
+		const result = await store.show(1);
 		expect(result.product_name).toEqual('Ali');
 	});
 
 	it('update method shall update a product', async () => {
-		const _ = await store.index();
 		const product = {
 			product_name: 'Ali',
 			price: 2,
 			description: 'Ali',
 		};
-		const result = await store.update(_[0].id as number, product);
+		const result = await store.update(1, product);
 		expect(result.price).toBeCloseTo(2);
 	});
 
 	it('delete method shall delete a product', async () => {
-		const _ = await store.index();
-		await store.delete(_[0].id as number);
+		await store.delete(1);
 		const result = await store.index();
 		expect(result).toHaveSize(0);
+	});
+
+	afterAll(async () => {
+		await resetTables();
 	});
 });

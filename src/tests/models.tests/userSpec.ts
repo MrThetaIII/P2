@@ -1,4 +1,5 @@
 import { User, UserStore } from '../../database/models/user';
+import resetTables from '../../database/models/testingUtil/reset.data';
 
 const store = new UserStore();
 
@@ -41,8 +42,7 @@ describe('users model methods', () => {
 	});
 
 	it('show method shall return a user', async () => {
-		const _ = await store.index();
-		const result = await store.show(_[0].id as number);
+		const result = await store.show(1);
 		expect(result.user_name_).toEqual('Ali');
 	});
 
@@ -62,15 +62,17 @@ describe('users model methods', () => {
 			email: 'Ali@Ali.Ali3',
 			user_password: 'Ali',
 		};
-		const _ = await store.index();
-		const result = await store.update(_[0].id as number, user);
+		const result = await store.update(1, user);
 		expect(result.email).toEqual(user.email);
 	});
 
 	it('delete method shall delete a user', async () => {
-		const _ = await store.index();
-		await store.delete(_[0].id as number);
+		await store.delete(1);
 		const result = await store.index();
-		expect(_.length - result.length).toEqual(1);
+		expect(result).toHaveSize(0);
+	});
+
+	afterAll(async () => {
+		await resetTables();
 	});
 });

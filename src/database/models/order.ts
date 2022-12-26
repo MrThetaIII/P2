@@ -197,4 +197,20 @@ export class OrderStore {
 			);
 		}
 	}
+
+	async resetTable(): Promise<void> {
+		try {
+			const sql_a = 'DELETE FROM order_products';
+			const sql_b = 'DELETE FROM orders';
+			const sql_c = 'ALTER SEQUENCE orders_id_seq RESTART WITH 1';
+			const sql_d = 'ALTER SEQUENCE order_products_id_seq RESTART WITH 1';
+			const cnctn = await client.connect();
+			await cnctn.query(sql_a);
+			await cnctn.query(sql_b);
+			await cnctn.query(sql_c);
+			await cnctn.query(sql_d);
+		} catch (err) {
+			throw new Error(`Could not reset orders. Error: ${err}`);
+		}
+	}
 }

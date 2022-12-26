@@ -1,6 +1,11 @@
-# Initiating
+# Database setup
+- if you don't have postgres already installed, install it from here: https://www.postgresql.org/download/
+- install the program and remember the password you set for the postgres user
+- on widows use command psql -U <username> to connect to the database after entering the password
+- on linux use sudo -u postgres psql
+- use command CREATE DATABASE <database_name> to create two data bases for development and testing
+- make a .env file with the following parameters:
 
-Please make sure you have a .env file with those parameters inside:
 POSTGRES_HOST = ***
 POSTGRES_DB = ***
 POSTGRES_USER = ***
@@ -11,6 +16,8 @@ JWT_SECRET = ***
 SALT = ***
 PEPPER = ***
 ENV = dev (|test)
+
+- now you can migrate the database using the command npm run migrate or use one of the main scripts
 
 # scripts
 
@@ -30,6 +37,8 @@ test: Migrate the test db and build the project, run the tests
 orient: Run prettier and eslint
 initiate: build and run the server for the first time: Would migrate the db
 go: build and run the server
+
+Note: All command-line commands where made to run on windows. Different OSs may require different commands.
 
 # endpoints
 

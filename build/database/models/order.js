@@ -111,7 +111,11 @@ var OrderStore = /** @class */ (function () {
                         _a.label = 3;
                     case 3:
                         if (!(i < products.length)) return [3 /*break*/, 6];
-                        return [4 /*yield*/, cnctn.query(sql_, [result.rows[0].id, products[i].product_id, products[i].quantity])];
+                        return [4 /*yield*/, cnctn.query(sql_, [
+                                result.rows[0].id,
+                                products[i].product_id,
+                                products[i].quantity,
+                            ])];
                     case 4:
                         _a.sent();
                         _a.label = 5;
@@ -188,7 +192,11 @@ var OrderStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         cnctn = _a.sent();
-                        return [4 /*yield*/, cnctn.query(sql, [id, product.product_id, product.quantity])];
+                        return [4 /*yield*/, cnctn.query(sql, [
+                                id,
+                                product.product_id,
+                                product.quantity,
+                            ])];
                     case 2:
                         result = _a.sent();
                         cnctn.release();
@@ -284,7 +292,11 @@ var OrderStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         cnctn = _a.sent();
-                        return [4 /*yield*/, cnctn.query(sql, [product.product_id, product.quantity, order_product_id])];
+                        return [4 /*yield*/, cnctn.query(sql, [
+                                product.product_id,
+                                product.quantity,
+                                order_product_id,
+                            ])];
                     case 2:
                         result = _a.sent();
                         cnctn.release();
@@ -341,6 +353,41 @@ var OrderStore = /** @class */ (function () {
                         err_12 = _a.sent();
                         throw new Error("Could not get orders for user with id: ".concat(id, ". Error: ").concat(err_12));
                     case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    OrderStore.prototype.resetTable = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var sql_a, sql_b, sql_c, sql_d, cnctn, err_13;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 6, , 7]);
+                        sql_a = 'DELETE FROM order_products';
+                        sql_b = 'DELETE FROM orders';
+                        sql_c = 'ALTER SEQUENCE orders_id_seq RESTART WITH 1';
+                        sql_d = 'ALTER SEQUENCE order_products_id_seq RESTART WITH 1';
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        cnctn = _a.sent();
+                        return [4 /*yield*/, cnctn.query(sql_a)];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, cnctn.query(sql_b)];
+                    case 3:
+                        _a.sent();
+                        return [4 /*yield*/, cnctn.query(sql_c)];
+                    case 4:
+                        _a.sent();
+                        return [4 /*yield*/, cnctn.query(sql_d)];
+                    case 5:
+                        _a.sent();
+                        return [3 /*break*/, 7];
+                    case 6:
+                        err_13 = _a.sent();
+                        throw new Error("Could not reset orders. Error: ".concat(err_13));
+                    case 7: return [2 /*return*/];
                 }
             });
         });

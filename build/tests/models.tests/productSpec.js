@@ -35,8 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var product_1 = require("../../database/models/product");
+var reset_data_1 = __importDefault(require("../../database/models/testingUtil/reset.data"));
 var store = new product_1.ProductStore();
 describe('products model methods', function () {
     it('Should have an index method', function () {
@@ -85,14 +89,11 @@ describe('products model methods', function () {
         });
     }); });
     it('show method shall return a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var _, result;
+        var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.index()];
+                case 0: return [4 /*yield*/, store.show(1)];
                 case 1:
-                    _ = _a.sent();
-                    return [4 /*yield*/, store.show(_[0].id)];
-                case 2:
                     result = _a.sent();
                     expect(result.product_name).toEqual('Ali');
                     return [2 /*return*/];
@@ -100,19 +101,17 @@ describe('products model methods', function () {
         });
     }); });
     it('update method shall update a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var _, product, result;
+        var product, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.index()];
-                case 1:
-                    _ = _a.sent();
+                case 0:
                     product = {
                         product_name: 'Ali',
                         price: 2,
                         description: 'Ali',
                     };
-                    return [4 /*yield*/, store.update(_[0].id, product)];
-                case 2:
+                    return [4 /*yield*/, store.update(1, product)];
+                case 1:
                     result = _a.sent();
                     expect(result.price).toBeCloseTo(2);
                     return [2 /*return*/];
@@ -120,19 +119,26 @@ describe('products model methods', function () {
         });
     }); });
     it('delete method shall delete a product', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var _, result;
+        var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, store.index()];
+                case 0: return [4 /*yield*/, store.delete(1)];
                 case 1:
-                    _ = _a.sent();
-                    return [4 /*yield*/, store.delete(_[0].id)];
-                case 2:
                     _a.sent();
                     return [4 /*yield*/, store.index()];
-                case 3:
+                case 2:
                     result = _a.sent();
                     expect(result).toHaveSize(0);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, reset_data_1.default)()];
+                case 1:
+                    _a.sent();
                     return [2 /*return*/];
             }
         });

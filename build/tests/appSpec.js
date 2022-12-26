@@ -41,8 +41,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
 var app_1 = __importDefault(require("../app"));
+var reset_data_1 = __importDefault(require("../database/models/testingUtil/reset.data"));
 var request = (0, supertest_1.default)(app_1.default);
+var token;
 describe('User endpoints', function () {
+    it('[POST]/api/users/ should create a user', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    user = {
+                        user_name_: 'Alii',
+                        email: 'Ali@Ali.Aliii',
+                        user_password: 'Alii',
+                    };
+                    return [4 /*yield*/, request.post('/api/users/').send(user)];
+                case 1:
+                    response = _a.sent();
+                    token = response.body;
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('[GET]/api/users/ should require a token to get all users', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -51,6 +72,20 @@ describe('User endpoints', function () {
                 case 1:
                     response = _a.sent();
                     expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[GET]/api/users/ should get all users once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .get('/api/users/')
+                        .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
                     return [2 /*return*/];
             }
         });
@@ -67,17 +102,13 @@ describe('User endpoints', function () {
             }
         });
     }); });
-    it('[POST]/api/users/ should create a user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user, response;
+    it('[GET]/api/users/:id should get a user once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    user = {
-                        user_name_: 'Alii',
-                        email: 'Ali@Ali.Aliii',
-                        user_password: 'Alii',
-                    };
-                    return [4 /*yield*/, request.post('/api/users/').send(user)];
+                case 0: return [4 /*yield*/, request
+                        .get('/api/users/1')
+                        .set('Authorization', "Bearer ".concat(token))];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toEqual(200);
@@ -103,18 +134,6 @@ describe('User endpoints', function () {
             }
         });
     }); });
-    it('[DELETE]/api/users/:id should require a token to delete a user', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request.delete('/api/users/1')];
-                case 1:
-                    response = _a.sent();
-                    expect(response.status).toEqual(401);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
     it('[PATCH]/api/users/:id should require a token to update a user', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -127,8 +146,126 @@ describe('User endpoints', function () {
             }
         });
     }); });
+    it('[PATCH]/api/users/:id should update a user once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    user = {
+                        user_name_: 'Alii_Rajii',
+                        email: 'Ali@Ali.Aliii',
+                        user_password: 'Alii',
+                    };
+                    return [4 /*yield*/, request
+                            .patch('/api/users/1')
+                            .send(user)
+                            .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[DELETE]/api/users/:id should require a token to delete a user', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.delete('/api/users/1')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[DELETE]/api/users/:id should delete a user once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .delete('/api/users/1')
+                        .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, reset_data_1.default)()];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
 describe('Order endpoints', function () {
+    it('[POST]/api/orders/ should require a token to create an order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.post('/api/orders/')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[POST]/api/orders/ should create an order once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, _, product, order, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    user = {
+                        user_name_: 'Alii',
+                        email: 'Ali@Ali.Aliii',
+                        user_password: 'Alii',
+                    };
+                    return [4 /*yield*/, request.post('/api/users/').send(user)];
+                case 1:
+                    _ = _a.sent();
+                    token = _.body;
+                    product = {
+                        product_name: 'Alii',
+                        price: 1,
+                        description: 'Alii',
+                    };
+                    return [4 /*yield*/, request
+                            .post('/api/products/')
+                            .send(product)
+                            .set('Authorization', "Bearer ".concat(token))];
+                case 2:
+                    _a.sent();
+                    order = {
+                        user_id_: '1',
+                        products: [
+                            {
+                                product_id: '1',
+                                quantity: '2',
+                            },
+                            {
+                                product_id: '1',
+                                quantity: '3',
+                            },
+                        ],
+                    };
+                    return [4 /*yield*/, request
+                            .post('/api/orders/')
+                            .send(order)
+                            .set('Authorization', "Bearer ".concat(token))];
+                case 3:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('[GET]/api/orders/all should require a token to get all orders', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -137,6 +274,20 @@ describe('Order endpoints', function () {
                 case 1:
                     response = _a.sent();
                     expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[GET]/api/orders/all should get all orders once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .get('/api/orders/all')
+                        .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
                     return [2 /*return*/];
             }
         });
@@ -153,26 +304,16 @@ describe('Order endpoints', function () {
             }
         });
     }); });
-    it('[POST]/api/orders/ should require a token to create an order', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('[GET]/api/orders/:id should get an order once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post('/api/orders/')];
+                case 0: return [4 /*yield*/, request
+                        .get('/api/orders/1')
+                        .set('Authorization', "Bearer ".concat(token))];
                 case 1:
                     response = _a.sent();
-                    expect(response.status).toEqual(401);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('[DELETE]/api/orders/:id should require a token to delete an order', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, request.delete('/api/orders/1')];
-                case 1:
-                    response = _a.sent();
-                    expect(response.status).toEqual(401);
+                    expect(response.status).toEqual(200);
                     return [2 /*return*/];
             }
         });
@@ -189,6 +330,25 @@ describe('Order endpoints', function () {
             }
         });
     }); });
+    it('[PATCH]/api/orders/:id should update an order once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var order, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    order = {
+                        user_id_: '1',
+                    };
+                    return [4 /*yield*/, request
+                            .patch('/api/orders/1')
+                            .send(order)
+                            .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('[PATCH]/api/orders/products/:id/fulfill should require a token to mark a product as fulfilled', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -197,6 +357,20 @@ describe('Order endpoints', function () {
                 case 1:
                     response = _a.sent();
                     expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[PATCH]/api/orders/products/:id/fulfill should mark a product as fulfilled once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .patch('/api/orders/products/1/fulfill')
+                        .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
                     return [2 /*return*/];
             }
         });
@@ -213,6 +387,20 @@ describe('Order endpoints', function () {
             }
         });
     }); });
+    it('[GET]/api/orders/ should get all orders by the current user once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .get('/api/orders/')
+                        .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('[GET]/api/orders/products should require a token to get all products', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -221,6 +409,20 @@ describe('Order endpoints', function () {
                 case 1:
                     response = _a.sent();
                     expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[GET]/api/orders/products should get all products once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .get('/api/orders/products')
+                        .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
                     return [2 /*return*/];
             }
         });
@@ -237,6 +439,20 @@ describe('Order endpoints', function () {
             }
         });
     }); });
+    it('[GET]/api/orders/:id/products should get all products by order once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .get('/api/orders/1/products')
+                        .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('[POST]/api/orders/:id/products should require a token to add a product to an order', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -245,6 +461,26 @@ describe('Order endpoints', function () {
                 case 1:
                     response = _a.sent();
                     expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[POST]/api/orders/:id/products should add a product to an order once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var product, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    product = {
+                        product_id: '1',
+                        quantity: '3',
+                    };
+                    return [4 /*yield*/, request
+                            .post('/api/orders/1/products')
+                            .send(product)
+                            .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
                     return [2 /*return*/];
             }
         });
@@ -261,6 +497,27 @@ describe('Order endpoints', function () {
             }
         });
     }); });
+    it('[PATCH]/api/orders/products/:id should update a product once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var product, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    product = {
+                        order_id: '1',
+                        product_id: '1',
+                        quantity: '3',
+                    };
+                    return [4 /*yield*/, request
+                            .patch('/api/orders/products/1')
+                            .send(product)
+                            .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('[DELETE]/api/orders/products/:id should require a token to delete a product', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -273,8 +530,100 @@ describe('Order endpoints', function () {
             }
         });
     }); });
+    it('[DELETE]/api/orders/products/:id should delete a product once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .delete('/api/orders/products/1')
+                        .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[DELETE]/api/orders/:id should require a token to delete an order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.delete('/api/orders/1')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[DELETE]/api/orders/:id should delete an order once givin a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .delete('/api/orders/1')
+                        .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, reset_data_1.default)()];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
 describe('Product endpoints', function () {
+    it('[POST]/api/products/ should require a token to create a product', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.post('/api/products/')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[POST]/api/products/ should create a product once given a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, _, product, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    user = {
+                        user_name_: 'Alii',
+                        email: 'Ali@Ali.Aliii',
+                        user_password: 'Alii',
+                    };
+                    return [4 /*yield*/, request.post('/api/users/').send(user)];
+                case 1:
+                    _ = _a.sent();
+                    token = _.body;
+                    product = {
+                        product_name: 'Alii',
+                        price: 1,
+                        description: 'Alii',
+                    };
+                    return [4 /*yield*/, request
+                            .post('/api/products/')
+                            .send(product)
+                            .set('Authorization', "Bearer ".concat(token))];
+                case 2:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     it('[GET]/api/products/ should return all products', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
@@ -299,14 +648,35 @@ describe('Product endpoints', function () {
             }
         });
     }); });
-    it('[POST]/api/products/ should require a token to create a product', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('[PATCH]/api/products/:id should require a token to update a product', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.post('/api/products/')];
+                case 0: return [4 /*yield*/, request.patch('/api/products/1')];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toEqual(401);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('[PATCH]/api/products/:id should update a product once given a token', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var product, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    product = {
+                        product_name: 'Alii',
+                        price: 1,
+                        description: 'Alii',
+                    };
+                    return [4 /*yield*/, request
+                            .patch('/api/products/1')
+                            .send(product)
+                            .set('Authorization', "Bearer ".concat(token))];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toEqual(200);
                     return [2 /*return*/];
             }
         });
@@ -323,14 +693,26 @@ describe('Product endpoints', function () {
             }
         });
     }); });
-    it('[PATCH]/api/products/:id should require a token to update a product', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('[DELETE]/api/products/:id should delete a product once given a token', function () { return __awaiter(void 0, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.patch('/api/products/1')];
+                case 0: return [4 /*yield*/, request
+                        .delete('/api/products/1')
+                        .set('Authorization', "Bearer ".concat(token))];
                 case 1:
                     response = _a.sent();
-                    expect(response.status).toEqual(401);
+                    expect(response.status).toEqual(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, reset_data_1.default)()];
+                case 1:
+                    _a.sent();
                     return [2 /*return*/];
             }
         });

@@ -1,6 +1,7 @@
 import { Order, OrderProduct, OrderStore } from '../../database/models/order';
 import { User, UserStore } from '../../database/models/user';
 import { Product, ProductStore } from '../../database/models/product';
+import resetTables from '../../database/models/testingUtil/reset.data';
 
 const store = new OrderStore();
 
@@ -73,9 +74,12 @@ describe('orders model methods', () => {
 		const order: Order = {
 			user_id_: 1,
 		};
-		const result = await store.create(order, [
-			{ order_id: 1, product_id: 1, quantity: 1 },
-		]);
+		const order_product = {
+			order_id: 1,
+			product_id: 1,
+			quantity: 1,
+		};
+		const result = await store.create(order, [order_product]);
 		expect(result.user_id_).toEqual(order.user_id_);
 	});
 
@@ -135,10 +139,6 @@ describe('orders model methods', () => {
 	});
 
 	afterAll(async () => {
-		const userStore = new UserStore();
-		await userStore.delete(1);
-		await userStore.delete(2);
-		const productStore = new ProductStore();
-		await productStore.delete(1);
+		await resetTables();
 	});
 });
